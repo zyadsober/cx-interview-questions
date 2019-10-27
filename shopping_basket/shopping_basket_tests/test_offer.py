@@ -78,3 +78,24 @@ class TestOffer(TestCase):
         self.assertEqual(type(self.test_offer.bundle_items), list)
         self.assertEqual(type(self.test_offer.bundle_items[0]), str)
         self.assertEqual(self.test_offer.required_items, 3)
+
+    def test_bundle_offer_discount(self):
+        # Baked Beans, Biscuits, Sardines
+        self.test_offer = BundleOffer([self.test_products[0],
+                                           self.test_products[1],
+                                           self.test_products[2]
+                                          ], 3)
+        self.test_basket = Basket(self.test_catalouge)
+        self.assertEqual(self.test_offer.get_discount(self.test_basket.products)[0], 0.00)
+        self.test_basket.add_product(self.test_products[0], 1)
+        self.assertEqual(self.test_offer.get_discount(self.test_basket.products)[0], 0.00)
+        self.test_basket.add_product(self.test_products[1], 1)
+        self.test_basket.add_product(self.test_products[2], 1)
+        self.test_basket.add_product(self.test_products[3], 1)
+        self.assertEqual(self.test_offer.get_discount(self.test_basket.products)[0], self.test_products[0].price)
+        # Add 1 more Baked Beans for a total of 2
+        self.test_basket.add_product(self.test_products[0], 1)
+        self.assertEqual(self.test_offer.get_discount(self.test_basket.products)[0], self.test_products[0].price)
+        # Add 1 more Biscuits for a total of 2
+        self.test_basket.add_product(self.test_products[1], 1)
+        self.assertEqual(self.test_offer.get_discount(self.test_basket.products)[0], self.test_products[1].price)

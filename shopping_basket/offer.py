@@ -1,6 +1,7 @@
 from abc import ABC
 from product import Product
 from type_validators import validate_type, validate_list_type_and_children_types
+from collections import OrderedDict
 from utilities import round_half_up
 
 
@@ -124,4 +125,27 @@ class BundleOffer(Offer):
             float, the next best discount
             dict, dict of product names(key) and their quantity(value) used in the discount
         """
-        raise NotImplementedError()
+        discount = 0
+        qualifying_item_count = 0
+        qualified_items = dict()
+        for product in basket_products:
+            if product in self.bundle_items:
+                qualifying_item_count += basket_products[product].quantity
+                qualified_items[product] = basket_products[product]
+        if qualifying_item_count >= self.required_items:
+            sorted_basket_products = OrderedDict(sorted(qualified_items.items(), key=lambda kv: kv[1].product.price, reverse=True))
+            remaining_items_count = self.required_items
+            items_used = dict()
+            for product in sorted_basket_products:
+                current_product = sorted_basket_products[product]
+                if remaining_items_count - current_product.quantity <= 0:
+                    discount = current_product.product.price
+                    items_used[current_product.product.name] = remaining_items_count
+                    remaining_items_count = 0
+                else:
+                    items_used[current_product.product.name] = current_product.quantity
+                    remaining_items_count -= current_product.quantity
+                if remaining_items_count <= 0:
+                    break
+            return discount, items_used
+        return discount, {}
