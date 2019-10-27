@@ -95,4 +95,4 @@ class Basket(object):
         """
         Clears the products in the basket
         """
-        self.products = list()
+        self.products = dict()
