@@ -4,7 +4,7 @@ from product import Product
 class BasketProduct(object):
     """
     Class that defines a product in a basket. Each basket product has a product
-    object and a quantity
+    object and a non-negative quantity
     """
     def __init__(self, product, quantity=1):
         """

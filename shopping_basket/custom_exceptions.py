@@ -2,6 +2,16 @@
 Contains custom exceptions for invalid operations or assertions
 """
 
+class InvalidProductPriceException(Exception):
+    def __init__(self):
+        """
+        Implements an exception type for invalid pricing of product
+        """
+        Exception.__init__(
+            self,
+            "Product prices must be greater than zero"
+        )
+
 class DuplicateProductException(Exception):
     def __init__(self):
         """

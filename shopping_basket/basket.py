@@ -4,7 +4,7 @@ from basket_product import BasketProduct
 
 class Basket(object):
     """
-    Class that defines a basket. Each basket has a number of products
+    Class that defines a basket. Each basket has a non-negative number of products
     """
     def __is_product_in_catalogue(self, product):
         """
