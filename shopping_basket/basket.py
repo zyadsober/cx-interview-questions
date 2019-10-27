@@ -10,6 +10,22 @@ class Basket(object):
     """
     Class that defines a basket. Each basket has a non-negative number of products
     """
+    @staticmethod
+    def get_basket_products_copy(basket_products):
+        """
+        Private Static method that takes returns a copy of a dict of BasketProducts
+        ---
+        Params:
+            basket_products: dict, the dictionary of basket products to copy
+        ---
+        Returns:
+            dict, the copy of the basket products
+        """
+        validate_type(basket_products, dict)
+        basket_products_copy = dict()
+        for product in basket_products:
+            basket_products_copy[product] = BasketProduct.get_copy(basket_products[product])
+        return basket_products_copy
     def __is_product_in_catalogue(self, product):
         """
         private method to check if the given product exists in the basket's catalogue
@@ -114,6 +130,44 @@ class Basket(object):
             subtotal += price * quantity
         return round_half_up(subtotal, 2)
 
+    def __search_best_offer(self, offers, products_for_discount):
+        """
+        Search for the best offer recursively in a depth first search
+        ---
+        Params:
+            offers: list, the offers that apply to the search
+            products_for_discount: dict, the products available to choose offers for
+                at this recursion level
+        ---
+        Returns:
+            int, the best discount from this level of recursion
+            list, the products used in the combination of offers chosen
+        """
+        best_discount = 0
+        best_products_used = dict()
+        for offer in self.offers:
+            # Deep copy
+            this_offer_products_for_discount = Basket.get_basket_products_copy(products_for_discount)
+            next_discount, products_used = offer.get_discount(this_offer_products_for_discount)
+            for product_used_name in products_used:
+                product_used_quanitity = products_used[product_used_name]
+                this_offer_products_for_discount[product_used_name].quantity -= product_used_quanitity
+                if this_offer_products_for_discount[product_used_name].quantity == 0:
+                    del this_offer_products_for_discount[product_used_name]
+            child_discount = 0
+            # Base case
+            if next_discount != 0:
+                child_discount, child_discount_products_used = self.__search_best_offer(offers, this_offer_products_for_discount)
+                for child_discount_product in child_discount_products_used:
+                    if child_discount_product in products_used:
+                        products_used[child_discount_product] += child_discount_products_used[child_discount_product]
+                    else:
+                        products_used[child_discount_product] = child_discount_products_used[child_discount_product]
+            if child_discount + next_discount > best_discount:
+                best_discount = child_discount + next_discount
+                best_products_used = products_used
+        return best_discount, best_products_used
+
     def calculate_discount(self):
         """
         Calculates the total discount that applies to the items currently in the basket
@@ -121,7 +175,9 @@ class Basket(object):
         Returns:
             float, the total discount that applies to the items currently in the basket
         """
-        raise NotImplementedError()
+        products_for_discount = Basket.get_basket_products_copy(self.products)
+        best_discount, best_products_used = self.__search_best_offer(self.offers, products_for_discount)
+        return round_half_up(best_discount, 2)
 
     def calculate_total(self):
         """

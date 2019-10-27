@@ -1,10 +1,25 @@
 from custom_exceptions import *
+from type_validators import validate_type
 
 
 class Product(object):
     """
     Class that defines a product. Each product has a name and a non-negative price
     """
+
+    @staticmethod
+    def get_copy(product):
+        """
+        Static method that takes returns a copy of the supplied Product
+        ---
+        Params:
+            product: BasketProduct, the product to copy
+        ---
+        Returns:
+            Product, the copy of the product
+        """
+        validate_type(product, Product)
+        return Product(product.name, product.price)
 
     @property
     def price(self):
