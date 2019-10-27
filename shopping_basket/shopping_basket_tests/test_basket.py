@@ -20,3 +20,36 @@ class TestBasket(TestCase):
     def test_construct_basket(self):
         self.test_basket = Basket(self.test_catalouge)
         self.assertEqual(len(self.test_basket.products), 0)
+
+    def test_construct_basket_with_product_lists(self):
+        self.test_basket = Basket(self.test_catalouge)
+        for product in self.test_products:
+            self.test_basket.add_product(product)
+        self.assertEqual(len(self.test_basket.products), len(self.test_products))
+
+    def test_add_product_to_basket(self):
+        self.test_basket = Basket(self.test_catalouge)
+        self.test_basket.add_product(self.test_products[0])
+        self.assertEqual(len(self.test_basket.products), 1)
+
+    def test_add_multi_product_to_basket(self):
+        self.test_basket = Basket(self.test_catalouge)
+        self.test_basket.add_product(self.test_products[0])
+        self.test_basket.add_product(self.test_products[0])
+        self.assertEqual(len(self.test_basket.products), 2)
+
+    def test_removing_product_from_basket(self):
+        self.test_basket = Basket(self.test_catalouge)
+        for product in self.test_products:
+            self.test_basket.add_product(product)
+        self.test_basket.remove_product(self.test_products[0])
+        self.assertEqual(len(self.test_basket.products), len(self.test_products) - 1)
+        self.assertEqual(self.test_products[0].name in self.test_basket.products, False)
+
+    def test_empty_basket(self):
+        self.test_basket = Basket(self.test_catalouge)
+        for product in self.test_products:
+            self.test_basket.add_product(product)
+        self.assertEqual(len(self.test_basket.products), len(self.test_products))
+        self.test_basket.empty()
+        self.assertEqual(len(self.test_basket.products), 0)
