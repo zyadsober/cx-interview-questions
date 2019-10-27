@@ -1,4 +1,6 @@
 from abc import ABC
+from product import Product
+from type_validators import validate_type, validate_list_type_and_children_types
 
 
 class Offer(ABC):

@@ -61,3 +61,31 @@ class TestBasket(TestCase):
         self.assertEqual(len(self.test_basket.products), len(self.test_products))
         self.test_basket.empty()
         self.assertEqual(len(self.test_basket.products), 0)
+
+    def test_basket_subtotal(self):
+        # One of each item
+        self.test_basket = Basket(self.test_catalouge)
+        for product in self.test_products:
+            self.test_basket.add_product(product)
+        self.assertEqual(self.test_basket.calculate_subtotal(), 12.08)
+
+        self.test_basket.empty()
+
+        # 4 Baked Beans and 1 Biscuits
+        # Add 4 Baked Beans
+        self.test_basket.add_product(self.test_products[0], 4)
+        # Add 1 Biscuits
+        self.test_basket.add_product(self.test_products[1])
+        self.assertEqual(self.test_basket.calculate_subtotal(), 5.16)
+
+        self.test_basket.empty()
+
+        # With Sardines 25% discount
+        self.test_basket = Basket(self.test_catalouge)
+        # Add 2 Baked Beans
+        self.test_basket.add_product(self.test_products[0], 2)
+        # Add 1 Biscuits
+        self.test_basket.add_product(self.test_products[1])
+        # Add 2 Sardines
+        self.test_basket.add_product(self.test_products[2], 2)
+        self.assertEqual(self.test_basket.calculate_subtotal(), 6.96)

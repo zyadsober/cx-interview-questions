@@ -2,6 +2,8 @@ from custom_exceptions import *
 from product import Product
 from basket_product import BasketProduct
 from type_validators import validate_type, validate_list_type_and_children_types
+from offer import Offer
+from utilities import round_half_up
 
 
 class Basket(object):
@@ -63,15 +65,18 @@ class Basket(object):
                             product.name
             ))
 
-    def __init__(self, catalogue):
+    def __init__(self, catalogue, offers=[]):
         """
         Constructor of the basket
         ---
         Params:
             catalogue: Catalogue, the catalogue associated with the basket
+            offers: list, the list of offers applied to this basket
         """
+        validate_list_type_and_children_types(offers, Offer)
         self.products = dict()
         self.catalogue = catalogue
+        self.offers = offers[:]
 
     def add_product(self, product, quantity=1):
         """
@@ -94,6 +99,38 @@ class Basket(object):
         """
         validate_type(product, Product)
         self.__remove_product(product, quantity)
+
+    def calculate_subtotal(self):
+        """
+        Calculates the subtotal for the items currently in the basket
+        ---
+        Returns:
+            float, the subtotal for the items currently in the basket
+        """
+        subtotal = 0
+        for product_name in self.products:
+            price = self.products[product_name].product.price
+            quantity = self.products[product_name].quantity
+            subtotal += price * quantity
+        return round_half_up(subtotal, 2)
+
+    def calculate_discount(self):
+        """
+        Calculates the total discount that applies to the items currently in the basket
+        ---
+        Returns:
+            float, the total discount that applies to the items currently in the basket
+        """
+        raise NotImplementedError()
+
+    def calculate_total(self):
+        """
+        Calculates the total that applies to the items currently in the basket after applied discounts
+        ---
+        Returns:
+            float, the total that applies to the items currently in the basket after applied discounts
+        """
+        return round_half_up(self.calculate_subtotal() - self.calculate_discount(), 2)
 
     def empty(self):
         """
