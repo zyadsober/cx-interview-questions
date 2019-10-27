@@ -32,12 +32,14 @@ class TestBasket(TestCase):
         self.test_basket = Basket(self.test_catalouge)
         self.test_basket.add_product(self.test_products[0])
         self.assertEqual(len(self.test_basket.products), 1)
+        self.assertEqual(self.test_basket.products[self.test_products[0].name].quantity, 1)
 
     def test_add_multi_product_to_basket(self):
         self.test_basket = Basket(self.test_catalouge)
         self.test_basket.add_product(self.test_products[0])
         self.test_basket.add_product(self.test_products[0])
-        self.assertEqual(len(self.test_basket.products), 2)
+        self.assertEqual(len(self.test_basket.products), 1)
+        self.assertEqual(self.test_basket.products[self.test_products[0].name].quantity, 2)
 
     def test_add_product_not_in_catalogue_to_basket(self):
         self.test_basket = Basket(self.test_catalouge)
