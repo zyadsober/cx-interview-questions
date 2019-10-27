@@ -1,6 +1,8 @@
 from custom_exceptions import *
 from product import Product
 from basket_product import BasketProduct
+from type_validators import validate_type, validate_list_type_and_children_types
+
 
 class Basket(object):
     """
@@ -79,6 +81,7 @@ class Basket(object):
             product: Product, the product to add to the basket
             quantity: int, the quantity of the product to add to the basket
         """
+        validate_type(product, Product)
         self.__add_product(product, quantity)
 
     def remove_product(self, product, quantity=1):
@@ -89,6 +92,7 @@ class Basket(object):
             product: Product, the product to remove from the basket
             quantity: int, the quantity of the product to remove from the basket
         """
+        validate_type(product, Product)
         self.__remove_product(product, quantity)
 
     def empty(self):

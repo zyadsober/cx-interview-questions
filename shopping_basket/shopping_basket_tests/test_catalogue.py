@@ -21,6 +21,16 @@ class TestCatalogue(TestCase):
         self.test_catalogue = Catalogue([])
         self.assertEqual(len(self.test_catalogue.products), 0)
 
+    def test_construct_catalogue_with_non_list(self):
+        with self.assertRaises(TypeError):
+            self.test_catalogue = Catalogue(self.test_products[0])
+        with self.assertRaises(TypeError):
+            self.test_catalogue = Catalogue('dummy')
+
+    def test_construct_catalogue_with_list_of_non_products(self):
+        with self.assertRaises(TypeError):
+            self.test_catalogue = Catalogue(['dummy', 'dummy'])
+
     def test_construct_catalogue_with_product_lists(self):
         self.test_catalogue = Catalogue(self.test_products)
         self.assertEqual(len(self.test_catalogue.products), len(self.test_products))

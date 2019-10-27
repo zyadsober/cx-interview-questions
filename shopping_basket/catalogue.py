@@ -1,5 +1,6 @@
 from custom_exceptions import *
 from product import Product
+from type_validators import validate_type, validate_list_type_and_children_types
 
 
 class Catalogue(object):
@@ -28,6 +29,8 @@ class Catalogue(object):
         Params:
             products: list, a list of products
         """
+        validate_list_type_and_children_types(products, Product)
+
         self.products = dict()
         for product in products:
             self.__add_product(product)
@@ -39,6 +42,7 @@ class Catalogue(object):
         Params:
             Product: Product, the product to add to the catalouge
         """
+        validate_type(product, Product)
         self.__add_product(product)
 
     def add_products(self, products):
@@ -48,6 +52,7 @@ class Catalogue(object):
         Params:
             Product: list, the list of products to add to the catalouge
         """
+        validate_list_type_and_children_types(products, Product)
         for product in products:
             self.__add_product(product)
 
@@ -58,6 +63,7 @@ class Catalogue(object):
         Params:
             Product: Product, the product to remove from the catalouge
         """
+        validate_type(product, Product)
         del self.products[product.name]
 
     def remove_products(self, products):
@@ -67,6 +73,7 @@ class Catalogue(object):
         Params:
             Product: list, the list of products to remove from the catalouge
         """
+        validate_list_type_and_children_types(products, Product)
         for product in products:
             del self.products[product.name]
 
