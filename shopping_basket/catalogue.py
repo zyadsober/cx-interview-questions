@@ -12,4 +12,30 @@ class Catalogue(object):
         Params:
             products: list, a list of products
         """
-        self.products = products
+        self.products = products[:]
+
+
+    def add_product(self, product):
+        """
+        Adds a single product to the catalouge
+        ---
+        Params:
+            Product: Product, the product to add to the catalouge
+        """
+        self.products.append(product)
+
+    def add_products(self, products):
+        """
+        Adds a list of products to the catalouge
+        ---
+        Params:
+            Product: list, the list of products to add to the catalouge
+        """
+        for product in products:
+            self.products.append(product)
+
+    def empty(self):
+        """
+        Clears the list of products in the catalouge
+        """
+        self.products = []
