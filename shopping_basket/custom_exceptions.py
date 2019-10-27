@@ -2,6 +2,16 @@
 Contains custom exceptions for invalid operations or assertions
 """
 
+class DuplicateProductException(Exception):
+    def __init__(self):
+        """
+        Implements an exception type for the duplication of a product
+        """
+        Exception.__init__(
+            self,
+            "A catalouge must not contain two of the same product"
+        )
+
 class ProductNotInCatalogueException(Exception):
     def __init__(self):
         """

@@ -39,6 +39,16 @@ class TestCatalogue(TestCase):
         )
         self.assertEqual(len(self.test_catalogue.products), len(self.test_products) + 2)
 
+    def test_removing_product_to_catalogue(self):
+        self.test_catalogue = Catalogue(self.test_products)
+        self.test_catalogue.remove_product(self.test_products[0])
+        self.assertEqual(len(self.test_catalogue.products), len(self.test_products) - 1)
+
+    def test_removing_products_to_catalogue(self):
+        self.test_catalogue = Catalogue(self.test_products)
+        self.test_catalogue.remove_products([self.test_products[0], self.test_products[1]])
+        self.assertEqual(len(self.test_catalogue.products), len(self.test_products) - 2)
+
     def test_empty_catalogue(self):
         self.test_catalogue = Catalogue(self.test_products)
         self.test_catalogue.empty()
