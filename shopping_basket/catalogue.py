@@ -34,6 +34,22 @@ class Catalogue(object):
         for product in products:
             self.products.append(product)
 
+
+    def get_product(self, product_name):
+        """
+        Gets a product from the catalogue based on its name
+        ---
+        Params:
+            product_name: str, the name of the product to return
+        ---
+        Returns:
+            Product, the found product. If not found returns None
+        """
+        for product in self.products:
+            if product.name == product_name:
+                return product
+        return None
+
     def empty(self):
         """
         Clears the list of products in the catalouge

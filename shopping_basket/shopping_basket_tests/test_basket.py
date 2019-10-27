@@ -1,3 +1,4 @@
+from custom_exceptions import *
 from unittest import TestCase
 from basket import Basket
 from catalogue import Catalogue
@@ -37,6 +38,11 @@ class TestBasket(TestCase):
         self.test_basket.add_product(self.test_products[0])
         self.test_basket.add_product(self.test_products[0])
         self.assertEqual(len(self.test_basket.products), 2)
+
+    def test_add_product_not_in_catalogue_to_basket(self):
+        self.test_basket = Basket(self.test_catalouge)
+        with self.assertRaises(ProductNotInCatalogueException):
+            self.test_basket.add_product(Product('Dummy Product', 1.00))
 
     def test_removing_product_from_basket(self):
         self.test_basket = Basket(self.test_catalouge)
