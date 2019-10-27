@@ -1,6 +1,7 @@
 from abc import ABC
 from product import Product
 from type_validators import validate_type, validate_list_type_and_children_types
+from utilities import round_half_up
 
 
 class Offer(ABC):
@@ -50,7 +51,12 @@ class BuyAndGetFreeOffer(Offer):
             float, the next best discount
             dict, dict of product names(key) and their quantity(value) used in the discount
         """
-        raise NotImplementedError()
+        discount = 0
+        if (self.product in basket_products and
+            basket_products[self.product].quantity >= self.buy_quantity + self.free_quantity):
+            discount = basket_products[self.product].product.price * self.free_quantity
+            return round_half_up(discount, 2), {self.product: self.buy_quantity + self.free_quantity}
+        return discount, {}
 
 
 class PercentageOffer(Offer):
@@ -82,7 +88,12 @@ class PercentageOffer(Offer):
             float, the next best discount
             dict, dict of product names(key) and their quantity(value) used in the discount
         """
-        raise NotImplementedError()
+        discount = 0
+        if (self.product in basket_products and
+            basket_products[self.product].quantity >= 1):
+            discount = basket_products[self.product].product.price * self.discount_percent
+            return round_half_up(discount, 2), {self.product: 1}
+        return discount, {}
 
 
 class BundleOffer(Offer):

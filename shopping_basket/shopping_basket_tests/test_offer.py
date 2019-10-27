@@ -1,7 +1,9 @@
 from unittest import TestCase
+from basket import Basket
 from product import Product
 from catalogue import Catalogue
 from offer import BuyAndGetFreeOffer, PercentageOffer, BundleOffer
+from utilities import round_half_up
 
 
 class TestOffer(TestCase):
@@ -27,6 +29,16 @@ class TestOffer(TestCase):
         self.assertEqual(self.test_offer.buy_quantity, 1)
         self.assertEqual(self.test_offer.free_quantity, 1)
 
+    def test_buy_and_get_free_offer_discount(self):
+        # Baked Beans buy one get one free
+        self.test_offer = BuyAndGetFreeOffer(self.test_products[0], 1, 1)
+        self.test_basket = Basket(self.test_catalouge)
+        self.test_basket.add_product(self.test_products[0], 1)
+        self.assertEqual(self.test_offer.get_discount(self.test_basket.products)[0], 0.00)
+        # Add 1 more Baked Beans for a total of 2
+        self.test_basket.add_product(self.test_products[0], 1)
+        self.assertEqual(self.test_offer.get_discount(self.test_basket.products)[0], self.test_products[0].price)
+
     def test_percentage_offer(self):
         """
         Tests the creation of a valid percentage offer
@@ -35,6 +47,23 @@ class TestOffer(TestCase):
         self.test_offer = PercentageOffer(self.test_products[0], 0.25)
         self.assertEqual(self.test_offer.product, self.test_products[0].name)
         self.assertEqual(self.test_offer.discount_percent, 0.25)
+
+    def test_percentage_offer_discount(self):
+        # Baked Beans buy one get one free
+        self.test_offer = PercentageOffer(self.test_products[0], 0.25)
+        self.test_basket = Basket(self.test_catalouge)
+        self.assertEqual(self.test_offer.get_discount(self.test_basket.products)[0], 0.00)
+        self.test_basket.add_product(self.test_products[0], 1)
+        self.assertEqual(self.test_offer.get_discount(
+            self.test_basket.products)[0],
+            round_half_up(self.test_products[0].price * 0.25, 2)
+        )
+        # Add 1 more Baked Beans for a total of 2
+        self.test_basket.add_product(self.test_products[0], 1)
+        self.assertEqual(self.test_offer.get_discount(
+            self.test_basket.products)[0],
+            round_half_up(self.test_products[0].price * 0.25, 2)
+        )
 
     def test_bundle_offer(self):
         """
