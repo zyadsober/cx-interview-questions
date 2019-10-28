@@ -11,4 +11,5 @@ The code uses a recursive DFS approach of exploring the different combinations o
 
 ## Assumptions:
 - A basket cannot apply two different offers to the same product:
+
     For example: Given a product X and offers Y and Z, offer Y gives a percentage discount on product X, offer Z gives a buy 2 get 1 free. If a basket contains a quantity of 3 for item X, then only one of the offers may apply to a single item when calculating the discount.
